@@ -1,0 +1,80 @@
+#%RAML 1.0
+#############
+# Copyright 2017 Koninklijke Philips Electronics N.V.
+#############
+
+title: Sleep StaffMember Service API
+version: 1.0
+baseUri: https://[server]/
+mediaType: application/json
+
+/facts:
+    post:
+        description: |
+            Creates a new staffMember for the specified user.
+        headers:
+            X-authentication-token:
+                example: |
+                    v5o/CqRGuU6l2MLi2IO4wsrIezlSGDnLiB7htOsKiyA=
+        body:
+            application/json:
+                schema: |
+                    {
+                        "$schema": "http://json-schema.org/draft-03/schema",
+                        "properties": {
+                            "userId": {
+                                "required": true,
+                                "type": "string"
+                            },
+                            "name": {
+                                "required": true,
+                                "type": "string"
+                            },
+                            "value": {
+                                "required": true,
+                                "type": "string"
+                            },
+                             "valueType": {
+                                "required": true,
+                                "type": "string",
+                                "enum": ["string", "double", "integer", "boolean"]
+                            },
+                             "created": {
+                                "description": "Timestamp in milliseconds, UTC timezone",
+                                "required": true,
+                                "type": "number"
+                            },
+                             "correlationId": {
+                                "required": true,
+                                "type": "string"
+                            },
+                             "domain": {
+                                "required": true,
+                                "type": "string"
+                            }
+                        }
+                    }
+                example: |
+                    {
+                        "userId": "user1234",
+                        "name": "steps",
+                        "value": "50",
+                        "valueType": "integer",
+                        "created": 452018960,
+                        "domain": "physicalActivity",
+                        "correlationId": "2a3df222-7bba-46f5-b330-752195e03c61"
+                    }
+        responses:
+            201:
+                description: |
+                    Fact successfully created.
+                headers:
+                    Location:
+                        example: |
+                            /facts/1
+            404:
+                description: |
+                    User id does not exist.
+            422:
+                description: |
+                    Entity is not processable (fails validation).

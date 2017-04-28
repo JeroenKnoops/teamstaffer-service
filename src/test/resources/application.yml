@@ -1,0 +1,7 @@
+hsdp:
+  dataservice:
+    url: http://test
+
+eureka:
+  client:
+    enabled: false

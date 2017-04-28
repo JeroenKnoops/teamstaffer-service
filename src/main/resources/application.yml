@@ -1,0 +1,88 @@
+server:
+  port: ${PORT:0}
+
+management:
+  context-path: /manage
+
+endpoints:
+    enabled: false
+    info.enabled: true
+    health.enabled: true
+
+eureka:
+ instance:
+   statusPageUrlPath: ${management.context-path}/info
+   healthCheckUrlPath: ${management.context-path}/health
+ client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+flyway:
+  enabled: true
+  baseline-on-migrate: true
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  datasource:
+    url: ${DB_CONNECTION_URL:jdbc:postgresql://db:5432}/${DB_NAME:teamstaffer}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:secret123}
+
+---
+# local stand alone development
+spring:
+  profiles: development
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/teamstaffer
+
+server:
+  port: 8080
+
+eureka:
+  client:
+    enabled: false
+
+---
+# For deployment in Docker containers
+spring:
+  profiles: docker
+
+server:
+  port: 8080
+
+eureka:
+  client:
+    enabled: false
+
+---
+spring:
+  profiles: docker-dev
+
+eureka:
+  client:
+    enabled: false
+
+---
+# For deployment in Docker containers on AWS
+spring:
+  profiles: aws
+
+
+docker:
+  network:
+    hostedPort: ${DOCKER_EXPOSED_PORT}
+  containerId: ${DOCKER_CONTAINER_ID}
+
+server:
+  port: 8080
+
+eureka:
+  client:
+    enabled: false

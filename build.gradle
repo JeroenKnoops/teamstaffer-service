@@ -1,0 +1,59 @@
+buildscript {
+    ext {
+        springBootVersion = '1.5.2.RELEASE'
+    }
+    repositories {
+        mavenLocal()
+        maven { url repoUrl }
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4+'
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1'
+        classpath 'gradle.plugin.com.github.jk1:gradle-license-report:0.3.9'
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'com.github.jk1.dependency-license-report'
+
+
+apply from: "${rootDir}/gradle/dependencies.gradle"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    maven { url repoUrl }
+    jcenter()
+}
+
+dependencies {
+    compile libraries.springboot,
+            libraries.tools,
+            libraries.database,
+            libraries.ppfmicroaws
+
+    testCompile libraries.test
+}
+
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Camden.SR6"
+    }
+}
+
+licenseReport {
+    // See https://github.com/jk1/Gradle-License-Report for more info
+    excludeGroups = []
+    renderer = new com.github.jk1.license.render.CsvReportRenderer()
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.3'
+}
