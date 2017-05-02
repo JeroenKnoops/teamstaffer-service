@@ -34,6 +34,3 @@ libraries.database = [
         'org.flywaydb:flyway-core:4.0.3'
 ]
 
-libraries.ppfmicroaws = [
-        'com.philips.digilabs.ppf.micro:aws-util:0.0.3'
-]
